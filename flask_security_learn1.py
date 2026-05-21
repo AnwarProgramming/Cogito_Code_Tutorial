@@ -13,6 +13,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(150), unique = True, nullable = False)
     password = db.Column(db.String(150), nullable = False)
     email = db.Column(db.String(150), unique = True, nullable = False)
+    active = db.Column(db.Boolean(), default = True)
 
     fs_uniquifier = db.Column(db.String(255), unique = True, nullable = False) 
     fs_token_uniquifier = db.Column(db.String(255), unique = True, nullable = False)
@@ -32,8 +33,8 @@ class Role(db.Model,RoleMixin):
 
 class UserRole(db.Model):
     id = db.Column(db.Integer, primary_key = True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key = True)
-    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), primary_key = True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
     
     def __repr__(self):
         return f'<UserRole user_id={self.user_id} role_id={self.role_id}>'
@@ -65,6 +66,9 @@ if __name__ == '__main__':
 
 
 
+
+
+
 # from flask import Flask, request, jsonify
 
 # # pip install flask_sqlalchemy
@@ -73,9 +77,13 @@ if __name__ == '__main__':
 # # pip install flask_security_too
 # from flask_security import UserMixin, RoleMixin, Security, SQLAlchemyUserDatastore
 
+# # Flask-Security is an extension that provides security features for Flask applications.
+# # It includes  features like user authentication, role management, and passoword hashing.
+
+
 # # 1.SQLAlchemyUserDatastore (The Bridge):
 # # This class is the "manager" for your user and role data. It acts as an abstraction layer between Flask-Security and your actual database.
-# # Its Job: It handles the low-level database operations (Create, Read, Update, Delete).
+# # Its Job: It handles the low-level database operations (CRUD: Create, Read, Update, Delete).
 # # so you don't have to write manual SQL or SQLAlchemy queries for user management.
 # # Key Functions:
 # #   create_user(): Handles password hashing and saving a new user.
@@ -114,6 +122,7 @@ if __name__ == '__main__':
 #     username = db.Column(db.String(150), unique = True, nullable = False)
 #     password = db.Column(db.String(150), nullable = False)
 #     email = db.Column(db.String(150), unique = True, nullable = False)
+#     active = db.Column(db.Boolean(), default = True) # active is an manadatory features of flask-security
 
 #     #Additional fields for Flask-Security
 #     fs_uniquifier = db.Column(db.String(255), unique = True, nullable = False) 
@@ -169,7 +178,7 @@ if __name__ == '__main__':
 # app.config['SECURITY_PASSWORD_SALT'] = 'my_passkey_is_salty'
 # app.config['SECRET_KEY'] = 'the_key_is_secret'
 
-# # SECRET_KEY is used by Flask for securely signing session cookies and CSRF tokens.
+# # SECRET_KEY is used by Flask for securely signing session cookies and CSRF tokens.(CSRF:Cross Site Request Forgery)
 # # SECRET_KEY is the main cryptographic key used by Flask to protect sensitive data.
 # # Flask uses it for:
 #     # Session cookies
